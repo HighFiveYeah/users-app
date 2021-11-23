@@ -1,13 +1,13 @@
 ﻿FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS sdk
 WORKDIR /app
 
-COPY UserApi.csproj ./
-RUN dotnet restore -r alpine-x64
+COPY ./UserApi.csproj ./
+RUN dotnet restore -r alpine-x64 UserApi.csproj
 
-RUN dotnet publish ./UserApi.csproj -r alpine-x64 -c Release -o ./publish --no-restore --self-contained true -p:PublishTrimmed=True -p:TrimMode=Link -p:PublishSingleFile=true
+COPY . ./
+RUN dotnet publish ./UserApi.csproj -r alpine-x64 -c Release -o ./publish --no-restore 
 
-FROM mcr.microsoft.com/dotnet/runtime-deps:6.0-alpine AS runtime
-
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine 
 WORKDIR /app
 COPY --from=sdk /app/publish .
-ENTRYPOINT ["./UserApi"]
+ENTRYPOINT ["dotnet", "./UserApi.dll"]
