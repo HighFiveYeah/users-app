@@ -7,7 +7,7 @@ namespace UserApi.DiModules
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType(typeof(GenericRepository<>)).AsImplementedInterfaces();
+            builder.RegisterGeneric(typeof(GenericRepository<>)).AsImplementedInterfaces();
             builder
                 .RegisterType<AppDbContext>()
                 .WithParameter("options", DbContextOptionsFactory.Get())
